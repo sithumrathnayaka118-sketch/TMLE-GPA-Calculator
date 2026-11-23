@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Official GPA and CGPA Calculator for Department of Transport Management and Logistics Engineering (TM&LE), Faculty of Engineering, University of Moratuwa (UoM).">
+<meta name="keywords" content="UoM GPA Calculator, TMLE GPA Calculator, Transport Management and Logistics Engineering, University of Moratuwa GPA, Moratuwa Engineering GPA">
+<meta name="author" content="Sithum Rathnayaka">
+    <title>UoM TM&LE GPA Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --uom-maroon: #6e0d25;
+            --uom-maroon-dark: #4f0819;
+            --uom-maroon-light: #941b38;
+            --uom-gold: #d4af37;
+            --uom-gold-light: #f8f1d8;
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            --ngpa-bg: #eef2ff;
+            --ngpa-text: #4338ca;
+            --gpa-bg: #ecfdf5;
+            --gpa-text: #047857;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding-bottom: 50px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--uom-maroon-dark), var(--uom-maroon));
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+            border-bottom: 4px solid var(--uom-gold);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        header p {
+            font-size: 0.95rem;
+            color: var(--uom-gold-light);
+            margin-top: 5px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 960px;
+            margin: 25px auto;
+            padding: 0 15px;
+        }
+
+        /* Top Controls */
+        .controls-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-left: 5px solid var(--uom-maroon);
+        }
+
+        .sem-selector {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            min-width: 260px;
+        }
+
+        .sem-selector label {
+            font-weight: 600;
+            color: var(--uom-maroon);
+            white-space: nowrap;
+        }
+
+        select {
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1.5px solid var(--border-color);
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-main);
+            background-color: #fff;
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.2s;
+            width: 100%;
+        }
+
+        select:focus {
+            border-color: var(--uom-maroon);
+        }
+
+        .action-btns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid #dc2626;
+            color: #dc2626;
+        }
+
+        .btn-outline:hover {
+            background: #fef2f2;
+        }
+
+        .btn-danger {
+            background: #dc2626;
+            border: 1.5px solid #dc2626;
+            color: #ffffff;
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+            border-color: #b91c1c;
+        }
+
+        /* Main Cards */
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 22px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--uom-maroon);
+            margin-bottom: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        /* Subject Table */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px 10px;
+            background-color: #f9fafb;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        td {
+            padding: 12px 10px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .mod-code {
+            font-weight: 700;
+            color: var(--uom-maroon);
+            white-space: nowrap;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.74rem;
+            font-weight: 600;
+            margin-left: 6px;
+        }
+
+        .badge-c { background: #fee2e2; color: #991b1b; }
+        .badge-e { background: #fef3c7; color: #92400e; }
+        .badge-custom { background: #e0f2fe; color: #075985; }
+
+        /* Clickable GPA/NGPA Switch Button */
+        .type-toggle-btn {
+            padding: 5px 11px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1.5px solid transparent;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
+
+        .type-gpa {
+            background-color: var(--gpa-bg);
+            color: var(--gpa-text);
+            border-color: #a7f3d0;
+        }
+
+        .type-gpa:hover {
+            background-color: #d1fae5;
+            transform: scale(1.03);
+        }
+
+        .type-ngpa {
+            background-color: var(--ngpa-bg);
+            color: var(--ngpa-text);
+            border-color: #c7d2fe;
+        }
+
+        .type-ngpa:hover {
+            background-color: #e0e7ff;
+            transform: scale(1.03);
+        }
+
+        .credit-input {
+            width: 72px;
+            padding: 6px 8px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.92rem;
+            text-align: center;
+            color: var(--text-main);
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+
+        .credit-input:focus {
+            outline: none;
+            border-color: var(--uom-maroon);
+            background-color: #fffbeb;
+        }
+
+        .grade-select {
+            padding: 7px 10px;
+            min-width: 110px;
+            font-weight: 600;
+        }
+
+        .remove-btn {
+            background: #fee2e2;
+            color: #dc2626;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .remove-btn:hover {
+            background: #fca5a5;
+            transform: scale(1.05);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 25px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Electives Pool (Faded / Click to add) */
+        .electives-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            gap: 12px;
+        }
+
+        .elective-chip {
+            border: 1.5px dashed #cbd5e1;
+            background-color: #f8fafc;
+            padding: 12px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            opacity: 0.72;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .elective-chip:hover {
+            opacity: 1;
+            border-color: var(--uom-maroon);
+            background-color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .elective-info h4 {
+            font-size: 0.88rem;
+            color: var(--uom-maroon);
+        }
+
+        .elective-info p {
+            font-size: 0.82rem;
+            color: var(--text-main);
+            margin-top: 2px;
+        }
+
+        .add-icon {
+            background: var(--uom-maroon);
+            color: white;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        /* Manual Add Form */
+        .manual-form {
+            display: grid;
+            grid-template-columns: 1fr 2fr 0.8fr 1fr auto;
+            gap: 10px;
+            align-items: end;
+        }
+
+        @media (max-width: 768px) {
+            .manual-form {
+                grid-template-columns: 1fr 1fr;
+            }
+            .manual-form button {
+                grid-column: span 2;
+            }
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .btn-add {
+            background-color: var(--uom-maroon);
+            color: white;
+            height: 40px;
+        }
+
+        .btn-add:hover {
+            background-color: var(--uom-maroon-light);
+        }
+
+        /* Calculate Button & Results */
+        .calc-wrapper {
+            text-align: center;
+            margin: 25px 0;
+        }
+
+        .btn-calculate {
+            background: linear-gradient(135deg, var(--uom-maroon), var(--uom-maroon-dark));
+            color: var(--uom-gold);
+            border: 2px solid var(--uom-gold);
+            padding: 14px 40px;
+            font-size: 1.15rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(110, 13, 37, 0.25);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-calculate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(110, 13, 37, 0.35);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .result-box {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            border-top: 4px solid var(--uom-maroon);
+        }
+
+        .result-box.highlight {
+            background: linear-gradient(135deg, var(--uom-maroon-dark), var(--uom-maroon));
+            color: white;
+            border-top: 4px solid var(--uom-gold);
+        }
+
+        .result-box h3 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.85;
+            margin-bottom: 8px;
+        }
+
+        .result-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+
+        .highlight .result-value {
+            color: var(--uom-gold);
+        }
+
+        .result-sub {
+            font-size: 0.82rem;
+            margin-top: 5px;
+            opacity: 0.8;
+        }
+
+        /* Grading Scale Reference Toggle */
+        .scale-info {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .scale-toggle {
+            background: none;
+            border: none;
+            color: var(--uom-maroon);
+            font-weight: 600;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .scale-table-box {
+            display: none;
+            max-width: 600px;
+            margin: 15px auto 0;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            font-size: 0.85rem;
+        }
+
+        .scale-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            text-align: center;
+        }
+
+        .scale-item {
+            background: #f8fafc;
+            padding: 6px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>University of Moratuwa</h1>
+    <p>B.Sc. Eng (Hons) in Transport Management & Logistics Engineering — GPA Calculator</p>
+</header>
+
+<div class="container">
+    <!-- Semester Selector -->
+    <div class="controls-card">
+        <div class="sem-selector">
+            <label for="semesterSelect">Select Semester:</label>
+            <select id="semesterSelect" onchange="changeSemester()">
+                <option value="sem1">Semester 1</option>
+                <option value="sem2">Semester 2</option>
+                <option value="sem3">Semester 3</option>
+                <option value="sem4">Semester 4</option>
+                <option value="sem5">Semester 5</option>
+                <option value="it">Industrial Training (LT3990)</option>
+                <option value="sem6">Semester 6</option>
+                <option value="sem7">Semester 7</option>
+                <option value="sem8">Semester 8</option>
+            </select>
+        </div>
+        <div class="action-btns">
+            <button class="btn btn-outline" onclick="resetCurrentSemester()" title="Reset only the selected semester">Reset Semester</button>
+            <button class="btn btn-danger" onclick="resetAllData()" title="Clear all grades and edits across all semesters">Reset All</button>
+        </div>
+    </div>
+
+    <!-- Active Subjects List -->
+    <div class="card">
+        <div class="section-title">
+            <span id="activeSemTitle">Semester 1 — Enrolled Modules</span>
+            <span style="font-size: 0.85rem; font-weight: 500; color: var(--text-muted);" id="creditSummary"></span>
+        </div>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Module Name</th>
+                        <th>Credits</th>
+                        <th>Type (Click to Switch)</th>
+                        <th>Grade</th>
+                        <th style="text-align: center;">Remove</th>
+                    </tr>
+                </thead>
+                <tbody id="activeModulesBody">
+                    <!-- Dynamic Rows -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Elective Subjects (Faded Click-to-Add) -->
+    <div class="card" id="electivesSection" style="display: none;">
+        <div class="section-title">
+            <span>Available Electives (Click to Add)</span>
+            <span style="font-size: 0.8rem; font-weight: 400; color: var(--text-muted);">Select the electives you followed</span>
+        </div>
+        <div class="electives-container" id="electivesPool">
+            <!-- Dynamic Elective Chips -->
+        </div>
+    </div>
+
+    <!-- Add Custom Subject Manually -->
+    <div class="card">
+        <div class="section-title">
+            <span>Add Missing / Extra Module Manually</span>
+            <span style="font-size: 0.8rem; font-weight: 400; color: var(--text-muted);">For Faculty Electives or unlisted modules</span>
+        </div>
+        <div class="manual-form">
+            <div class="form-group">
+                <label>Module Code</label>
+                <input type="text" id="custCode" placeholder="e.g., ME4210">
+            </div>
+            <div class="form-group">
+                <label>Module Name</label>
+                <input type="text" id="custName" placeholder="e.g., Faculty Elective">
+            </div>
+            <div class="form-group">
+                <label>Credits</label>
+                <input type="number" id="custCredits" step="0.5" min="0.5" max="15" placeholder="3.0">
+            </div>
+            <div class="form-group">
+                <label>GPA / NGPA</label>
+                <select id="custType">
+                    <option value="GPA">GPA</option>
+                    <option value="NGPA">Non-GPA (NGPA)</option>
+                </select>
+            </div>
+            <button class="btn btn-add" onclick="addCustomModule()">+ Add</button>
+        </div>
+    </div>
+
+    <!-- Calculate Button -->
+    <div class="calc-wrapper">
+        <button class="btn-calculate" onclick="calculateGPA()">Calculate GPA</button>
+    </div>
+
+    <!-- Results Section -->
+    <div class="results-grid" id="resultsSection">
+        <div class="result-box highlight">
+            <h3>Semester GPA (SGPA)</h3>
+            <div class="result-value" id="sgpaValue">0.00</div>
+            <div class="result-sub" id="sgpaCredits">0.0 GPA Credits</div>
+        </div>
+        <div class="result-box">
+            <h3>Overall CGPA (All Entered)</h3>
+            <div class="result-value" style="color: var(--uom-maroon);" id="cgpaValue">0.00</div>
+            <div class="result-sub" id="cgpaCredits">0.0 Total GPA Credits</div>
+        </div>
+        <div class="result-box">
+            <h3>Non-GPA Credits Earned</h3>
+            <div class="result-value" style="color: var(--ngpa-text);" id="ngpaCredits">0.0</div>
+            <div class="result-sub">Excluded from GPA calc</div>
+        </div>
+    </div>
+
+    <!-- UoM Grading Scale Reference -->
+    <div class="scale-info">
+        <button class="scale-toggle" onclick="toggleScale()">View UoM Grade Point System (Table 3)</button>
+        <div class="scale-table-box" id="scaleBox">
+            <div class="scale-grid">
+                <div class="scale-item"><strong>A+</strong> : 4.2 (85+)</div>
+                <div class="scale-item"><strong>A</strong> : 4.0 (75-84)</div>
+                <div class="scale-item"><strong>A-</strong> : 3.7 (70-74)</div>
+                <div class="scale-item"><strong>B+</strong> : 3.3 (65-69)</div>
+                <div class="scale-item"><strong>B</strong> : 3.0 (60-64)</div>
+                <div class="scale-item"><strong>B-</strong> : 2.7 (55-59)</div>
+                <div class="scale-item"><strong>C+</strong> : 2.3 (50-54)</div>
+                <div class="scale-item"><strong>C</strong> : 2.0 (45-49)</div>
+                <div class="scale-item"><strong>C-</strong> : 1.5 (40-44)</div>
+                <div class="scale-item"><strong>D</strong> : 1.0 (35-39)</div>
+                <div class="scale-item"><strong>F / I</strong> : 0.0 (&le;34)</div>
+                <div class="scale-item"><strong>N / W</strong> : Excluded</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // UoM Grade Point System (Table 3)
+    const GRADE_POINTS = {
+        "": null,
+        "A+": 4.2,
+        "A": 4.0,
+        "A-": 3.7,
+        "B+": 3.3,
+        "B": 3.0,
+        "B-": 2.7,
+        "C+": 2.3,
+        "C": 2.0,
+        "C-": 1.5,
+        "D": 1.0,
+        "F": 0.0,
+        "I-we": 0.0,
+        "I-ca": 0.0,
+        "N": "EXCLUDE",
+        "W": "EXCLUDE"
+    };
+
+    // Full TM&LE Curriculum Data (Intake 2021 Onwards)
+    const CURRICULUM = {
+        sem1: {
+            title: "Semester 1",
+            modules: [
+                { code: "MA1014", name: "Mathematics", credits: 3.0, category: "C", isGpa: true },
+                { code: "CS1033", name: "Programming Fundamentals", credits: 3.0, category: "C", isGpa: true },
+                { code: "CE1023", name: "Fluid Mechanics", credits: 2.0, category: "C", isGpa: true },
+                { code: "LT1010", name: "Fundamentals of Transport and Logistics Systems", credits: 3.0, category: "C", isGpa: true },
+                { code: "LT1020", name: "Mechanics in Transport", credits: 3.0, category: "C", isGpa: true },
+                { code: "EE1040", name: "Electrical Fundamentals", credits: 2.0, category: "C", isGpa: true },
+                { code: "EL1030", name: "Language Skills Enhancement", credits: 1.0, category: "C", isGpa: true }
+            ]
+        },
+        sem2: {
+            title: "Semester 2",
+            modules: [
+                { code: "MA1024", name: "Methods of Mathematics", credits: 3.0, category: "C", isGpa: true },
+                { code: "EN1803", name: "Basic Electronics for Engineering Applications", credits: 2.0, category: "C", isGpa: true },
+                { code: "CS2813", name: "Visual Programming", credits: 2.0, category: "C", isGpa: true },
+                { code: "LT1030", name: "Operations Research for Transport and Logistics Systems", credits: 3.0, category: "C", isGpa: true },
+                { code: "LT1040", name: "Geo-Spatial Analysis", credits: 3.0, category: "C", isGpa: true },
+                { code: "LT1050", name: "Systems Engineering", credits: 3.0, category: "C", isGpa: true },
+                { code: "LT1900", name: "Essential Skills Development", credits: 1.0, category: "C", isGpa: false },
+                { code: "EL1030", name: "Language Skills Enhancement", credits: 1.0, category: "C", isGpa: true },
+                { code: "HM-1", name: "Humanities Elective I", credits: 2.0, category: "E", isGpa: true }
+            ]
+        },
+        sem3: {
+            title: "Semester 3",
+            modules: [
+                { code: "LT2010", name: "Data Science for Transport and Logistics Systems", credits: 4.0, category: "C", isGpa: true },
+                { code: "LT2020", name: "Engineering Economics", credits: 3.0, category: "C", isGpa: true },
+                { code: "LT2030", name: "Operations Engineering", credits: 4.0, category: "C", isGpa: true },
+                { code: "LT2040", name: "Quantitative Methods for Transport and Logistics Systems", credits: 4.0, category: "C", isGpa: true },
+                { code: "LT2050", name: "Principles of Supply Chain Engineering", credits: 3.0, category: "C", isGpa: true },
+                { code: "LT2060", name: "Global Logistics Systems", credits: 2.0, category: "C", isGpa: true },
+                { code: "LT1900", name: "Essential Skills Development", credits: 1.0, category: "C", isGpa: false }
+            ]
+        },
+        sem4: {
+            title: "Semester 4",
+            modules: [
+                { code: "LT2070", name: "Sustainable Design of Transport and Logistics Systems", credits: 2.0, category: "C", isGpa: true },
+                { code: "LT2080", name: "Land Transport Systems", credits: 3.0, category: "C", isGpa: true },
+                { code: "LT2090", name: "Maritime Transport Systems", credits: 3.0, category: "C", isGpa: true },
+                { code: "LT2100", name: "Air Transport Systems", credits: 3.0, category: "C", isGpa: true },
+                { code: "LT2110", name: "Transport Demand Modelling and Simulation", credits: 3.0, category: "C", isGpa: true },
+                { code: "LT2120", name: "Supply Chain Analytics", credits: 3.0, category: "C", isGpa: true },
+                { code: "LT2210", name: "System Dynamics", credits: 3.0, category: "E", isGpa: true },
+                { code: "LT2220", name: "Quality Management in Engineering", credits: 3.0, category: "E", isGpa: true },
+                { code: "LT2230", name: "Advanced Operations Research in Transport and Logistics Systems", credits: 3.0, category: "E", isGpa: true }
+            ]
+        },
+        sem5: {
+            title: "Semester 5",
+            modules: [
+                { code: "LT3010", name: "Principles of Management, Accounting and Finance", credits: 3.0, category: "C", isGpa: true },
+                { code: "LT3020", name: "Supply Chain Design", credits: 3.0, category: "C", isGpa: true },
+                { code: "LT3030", name: "Safety and Security in Mobility Systems", credits: 2.0, category: "C", isGpa: true },
+                { code: "LT3040", name: "Design of Mobility Systems", credits: 5.0, category: "C", isGpa: true },
+                { code: "LT3050", name: "Planning and Design of Transport and Logistics Facilities", credits: 3.0, category: "C", isGpa: true },
+                { code: "LT3880", name: "Engineer and Society", credits: 1.0, category: "C", isGpa: true }
+            ]
+        },
+        it: {
+            title: "Industrial Training",
+            modules: [
+                { code: "LT3990", name: "Industrial Training", credits: 6.0, category: "C", isGpa: false }
+            ]
+        },
+        sem6: {
+            title: "Semester 6",
+            modules: [
+                { code: "LT4200", name: "Research Project", credits: 2.0, category: "C", isGpa: true },
+                { code: "LT4860", name: "Integrated Capstone Design Project", credits: 2.0, category: "C", isGpa: true },
+                { code: "LT3070", name: "Entrepreneurship and Business Management", credits: 2.0, category: "C", isGpa: true },
+                { code: "LT3900", name: "Research Methodologies for Transport and Logistics", credits: 2.0, category: "C", isGpa: true },
+                { code: "LT3880", name: "Engineer and Society", credits: 2.0, category: "C", isGpa: false },
+                { code: "HM-2", name: "Humanities Elective II", credits: 2.0, category: "E", isGpa: true }
+            ]
+        },
+        sem7: {
+            title: "Semester 7",
+            modules: [
+                { code: "LT4200", name: "Research Project", credits: 2.0, category: "C", isGpa: true },
+                { code: "LT4860", name: "Integrated Capstone Design Project", credits: 3.0, category: "C", isGpa: true },
+                { code: "LT4010", name: "Marketing and Managerial Skills for Engineers", credits: 3.0, category: "C", isGpa: true },
+                { code: "LT4020", name: "Project Management and Appraisal", credits: 3.0, category: "C", isGpa: true },
+                { code: "LT4030", name: "Contract Management and Human Resources", credits: 2.0, category: "C", isGpa: true },
+                { code: "LT4210", name: "Railway Operations Planning", credits: 3.0, category: "E", isGpa: true },
+                { code: "LT4220", name: "Big Data Analytics for Mobility Decisions", credits: 3.0, category: "E", isGpa: true },
+                { code: "LT4230", name: "Inventory Operations and Warehouse Design", credits: 3.0, category: "E", isGpa: true },
+                { code: "LT4240", name: "Design of Urban Logistics", credits: 3.0, category: "E", isGpa: true },
+                { code: "LT4250", name: "Manufacturing and Service Operations Management", credits: 3.0, category: "E", isGpa: true },
+                { code: "LT4260", name: "Design of Public Transport Operations", credits: 3.0, category: "E", isGpa: true },
+                { code: "LT4270", name: "Artificial Intelligence for Supply Chains", credits: 3.0, category: "E", isGpa: true },
+                { code: "LT4280", name: "Project Formulation and Procurement", credits: 3.0, category: "E", isGpa: true },
+                { code: "LT4290", name: "Applications of Robotics and Automation in Transport and Logistics Systems", credits: 3.0, category: "E", isGpa: true },
+                { code: "LT4300", name: "Shipping Logistics", credits: 3.0, category: "E", isGpa: true },
+                { code: "LT4400", name: "Aerodrome Planning and Operations", credits: 3.0, category: "E", isGpa: true }
+            ]
+        },
+        sem8: {
+            title: "Semester 8",
+            modules: [
+                { code: "LT4200", name: "Research Project", credits: 2.0, category: "C", isGpa: true },
+                { code: "LT4560", name: "Integrated Capstone Design Project", credits: 3.0, category: "C", isGpa: true },
+                { code: "LT4040", name: "Smart Technologies for Transport and Logistics Systems", credits: 3.0, category: "C", isGpa: true },
+                { code: "LT4310", name: "Smart Cities and Mobility", credits: 3.0, category: "E", isGpa: true },
+                { code: "LT4320", name: "Analytics for Procurement", credits: 3.0, category: "E", isGpa: true },
+                { code: "LT4330", name: "Network Science for Mobility Systems", credits: 3.0, category: "E", isGpa: true },
+                { code: "LT4340", name: "Design and Operation of Ports", credits: 3.0, category: "E", isGpa: true },
+                { code: "LT4350", name: "Aviation Logistics", credits: 3.0, category: "E", isGpa: true },
+                { code: "LT4360", name: "Disruptive Vehicular Technologies", credits: 3.0, category: "E", isGpa: true },
+                { code: "LT4370", name: "Disaster and Humanitarian Logistics", credits: 3.0, category: "E", isGpa: true },
+                { code: "LT4380", name: "Risk Management in Transport and Logistics", credits: 3.0, category: "E", isGpa: true },
+                { code: "LT4390", name: "Intelligent Mobility Systems", credits: 3.0, category: "E", isGpa: true },
+                { code: "LT4410", name: "Aviation Technology and Operations", credits: 3.0, category: "E", isGpa: true }
+            ]
+        }
+    };
+
+    // State management saved in localStorage
+    let userState = JSON.parse(localStorage.getItem('uom_tmle_gpa_state_v3')) || {};
+
+    function initSemesterState(semKey) {
+        if (!userState[semKey]) {
+            const compulsory = CURRICULUM[semKey].modules
+                .filter(m => m.category === "C")
+                .map((m, idx) => ({ ...m, id: `${semKey}_c_${idx}`, grade: "" }));
+            userState[semKey] = {
+                active: compulsory
+            };
+            saveState();
+        }
+    }
+
+    function saveState() {
+        localStorage.setItem('uom_tmle_gpa_state_v3', JSON.stringify(userState));
+    }
+
+    function changeSemester() {
+        const semKey = document.getElementById('semesterSelect').value;
+        initSemesterState(semKey);
+        renderSemester(semKey);
+        document.getElementById('resultsSection').style.display = 'none';
+    }
+
+    function updateCreditSummary(semKey) {
+        let totalGpaCreds = 0;
+        let totalNgpaCreds = 0;
+
+        userState[semKey].active.forEach(mod => {
+            const c = parseFloat(mod.credits) || 0;
+            if (mod.isGpa) totalGpaCreds += c;
+            else totalNgpaCreds += c;
+        });
+
+        document.getElementById('creditSummary').innerText = `Selected: ${totalGpaCreds.toFixed(1)} GPA | ${totalNgpaCreds.toFixed(1)} NGPA Credits`;
+    }
+
+    function renderSemester(semKey) {
+        const semData = CURRICULUM[semKey];
+        const activeList = userState[semKey].active;
+
+        document.getElementById('activeSemTitle').innerText = `${semData.title} — Enrolled Modules`;
+
+        // Render Active Table
+        const tbody = document.getElementById('activeModulesBody');
+        tbody.innerHTML = '';
+
+        if (activeList.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" class="empty-state">No modules in this semester. Add electives below, add a custom module, or click "Reset Semester".</td></tr>`;
+        } else {
+            activeList.forEach((mod, index) => {
+                const tr = document.createElement('tr');
+                
+                let catBadge = `<span class="badge badge-c">Compulsory</span>`;
+                if (mod.category === "E") catBadge = `<span class="badge badge-e">Elective</span>`;
+                if (mod.category === "CUSTOM") catBadge = `<span class="badge badge-custom">Custom</span>`;
+
+                let gpaToggleBtn = mod.isGpa 
+                    ? `<button class="type-toggle-btn type-gpa" title="Click to switch to Non-GPA (NGPA)" onclick="toggleGpaType('${semKey}', ${index})">GPA ⇄</button>` 
+                    : `<button class="type-toggle-btn type-ngpa" title="Click to switch to GPA" onclick="toggleGpaType('${semKey}', ${index})">NGPA ⇄</button>`;
+
+                // Build Grade Dropdown
+                let gradeOptions = `<option value="">-- Select --</option>`;
+                Object.keys(GRADE_POINTS).forEach(g => {
+                    if (g !== "") {
+                        const selected = mod.grade === g ? "selected" : "";
+                        gradeOptions += `<option value="${g}" ${selected}>${g}</option>`;
+                    }
+                });
+
+                tr.innerHTML = `
+                    <td class="mod-code">${mod.code}</td>
+                    <td>${mod.name} ${catBadge}</td>
+                    <td>
+                        <input type="number" class="credit-input" step="0.5" min="0" max="20" 
+                               value="${parseFloat(mod.credits).toFixed(1)}" 
+                               onchange="updateCredits('${semKey}', ${index}, this.value)">
+                    </td>
+                    <td>${gpaToggleBtn}</td>
+                    <td>
+                        <select class="grade-select" onchange="updateGrade('${semKey}', ${index}, this.value)">
+                            ${gradeOptions}
+                        </select>
+                    </td>
+                    <td style="text-align: center;">
+                        <button class="remove-btn" title="Remove Module" onclick="removeModule('${semKey}', ${index})">&times;</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        updateCreditSummary(semKey);
+
+        // Render Electives Pool (Faded items not yet added)
+        const allElectives = semData.modules.filter(m => m.category === "E");
+        const activeCodes = activeList.map(m => m.code);
+        const remainingElectives = allElectives.filter(e => !activeCodes.includes(e.code));
+
+        const electivesSection = document.getElementById('electivesSection');
+        const electivesPool = document.getElementById('electivesPool');
+        electivesPool.innerHTML = '';
+
+        if (remainingElectives.length > 0) {
+            electivesSection.style.display = 'block';
+            remainingElectives.forEach(elec => {
+                const chip = document.createElement('div');
+                chip.className = 'elective-chip';
+                chip.onclick = () => addElective(semKey, elec.code);
+                chip.innerHTML = `
+                    <div class="elective-info">
+                        <h4>${elec.code} (${elec.credits.toFixed(1)} Credits)</h4>
+                        <p>${elec.name}</p>
+                    </div>
+                    <div class="add-icon">+</div>
+                `;
+                electivesPool.appendChild(chip);
+            });
+        } else {
+            electivesSection.style.display = 'none';
+        }
+    }
+
+    function toggleGpaType(semKey, index) {
+        userState[semKey].active[index].isGpa = !userState[semKey].active[index].isGpa;
+        saveState();
+        renderSemester(semKey);
+    }
+
+    function updateCredits(semKey, index, newVal) {
+        let parsed = parseFloat(newVal);
+        if (isNaN(parsed) || parsed < 0) {
+            parsed = 0;
+        }
+        userState[semKey].active[index].credits = parsed;
+        saveState();
+        updateCreditSummary(semKey);
+    }
+
+    function addElective(semKey, modCode) {
+        const mod = CURRICULUM[semKey].modules.find(m => m.code === modCode);
+        if (mod) {
+            userState[semKey].active.push({
+                ...mod,
+                id: `${semKey}_e_${Date.now()}`,
+                grade: ""
+            });
+            saveState();
+            renderSemester(semKey);
+        }
+    }
+
+    function addCustomModule() {
+        const semKey = document.getElementById('semesterSelect').value;
+        const code = document.getElementById('custCode').value.trim().toUpperCase();
+        const name = document.getElementById('custName').value.trim();
+        const credits = parseFloat(document.getElementById('custCredits').value);
+        const isGpa = document.getElementById('custType').value === "GPA";
+
+        if (!code || !name || isNaN(credits) || credits <= 0) {
+            alert("Please enter valid Module Code, Name, and Credits.");
+            return;
+        }
+
+        userState[semKey].active.push({
+            id: `${semKey}_custom_${Date.now()}`,
+            code: code,
+            name: name,
+            credits: credits,
+            category: "CUSTOM",
+            isGpa: isGpa,
+            grade: ""
+        });
+
+        // Clear inputs
+        document.getElementById('custCode').value = '';
+        document.getElementById('custName').value = '';
+        document.getElementById('custCredits').value = '';
+
+        saveState();
+        renderSemester(semKey);
+    }
+
+    function removeModule(semKey, index) {
+        userState[semKey].active.splice(index, 1);
+        saveState();
+        renderSemester(semKey);
+    }
+
+    function updateGrade(semKey, index, grade) {
+        userState[semKey].active[index].grade = grade;
+        saveState();
+    }
+
+    function resetCurrentSemester() {
+        const semKey = document.getElementById('semesterSelect').value;
+        if (confirm("Reset this semester back to default compulsory modules and clear its grades?")) {
+            delete userState[semKey];
+            initSemesterState(semKey);
+            renderSemester(semKey);
+            document.getElementById('resultsSection').style.display = 'none';
+        }
+    }
+
+    function resetAllData() {
+        if (confirm("Are you sure you want to reset ALL semesters? This will clear every grade, credit edit, and custom module across the entire calculator.")) {
+            userState = {};
+            localStorage.removeItem('uom_tmle_gpa_state_v3');
+            const semKey = document.getElementById('semesterSelect').value;
+            initSemesterState(semKey);
+            renderSemester(semKey);
+            document.getElementById('resultsSection').style.display = 'none';
+        }
+    }
+
+    function calculateGPA() {
+        const currentSem = document.getElementById('semesterSelect').value;
+        
+        // 1. Current Semester SGPA
+        let semPoints = 0;
+        let semGpaCredits = 0;
+        let semNgpaCredits = 0;
+
+        userState[currentSem].active.forEach(mod => {
+            const gp = GRADE_POINTS[mod.grade];
+            const cred = parseFloat(mod.credits) || 0;
+            if (gp !== null && gp !== "EXCLUDE") {
+                if (mod.isGpa) {
+                    semPoints += gp * cred;
+                    semGpaCredits += cred;
+                } else {
+                    if (gp >= 2.0 || mod.grade === "D" || mod.grade === "C-") {
+                        semNgpaCredits += cred;
+                    }
+                }
+            }
+        });
+
+        const sgpa = semGpaCredits > 0 ? (semPoints / semGpaCredits) : 0;
+
+        // 2. Overall CGPA across all entered semesters
+        let totalPoints = 0;
+        let totalGpaCredits = 0;
+
+        Object.keys(userState).forEach(sKey => {
+            userState[sKey].active.forEach(mod => {
+                const gp = GRADE_POINTS[mod.grade];
+                const cred = parseFloat(mod.credits) || 0;
+                if (gp !== null && gp !== "EXCLUDE" && mod.isGpa) {
+                    totalPoints += gp * cred;
+                    totalGpaCredits += cred;
+                }
+            });
+        });
+
+        const cgpa = totalGpaCredits > 0 ? (totalPoints / totalGpaCredits) : 0;
+
+        // Display Results
+        document.getElementById('sgpaValue').innerText = sgpa.toFixed(2);
+        document.getElementById('sgpaCredits').innerText = `${semGpaCredits.toFixed(1)} GPA Credits Counted`;
+        
+        document.getElementById('cgpaValue').innerText = cgpa.toFixed(2);
+        document.getElementById('cgpaCredits').innerText = `${totalGpaCredits.toFixed(1)} Cumulative GPA Credits`;
+        
+        document.getElementById('ngpaCredits').innerText = semNgpaCredits.toFixed(1);
+
+        const resBox = document.getElementById('resultsSection');
+        resBox.style.display = 'grid';
+        resBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function toggleScale() {
+        const box = document.getElementById('scaleBox');
+        box.style.display = box.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Initialize on load
+    window.onload = () => {
+        changeSemester();
+    };
+</script>
+
+</body>
+</html>
